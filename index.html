@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Multilingual Learning Hub — Crane Nav (v2+)</title>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+  <script defer src="js/app.js"></script>
+  <script defer src="js/modules/music.js"></script>
+  <script defer src="js/modules/pennants.js"></script>
+</head>
+<body>
+  <main id="stage" class="stage" aria-label="Multilingual Learning Hub">
+    <div class="room-bg" role="img" aria-label="Hub room background"></div>
+
+    <!-- Hotspots (invisible buttons over real objects) -->
+    <button class="hotspot hotspot-music" data-open="music" aria-label="Open Jukebox"></button>
+    <button class="hotspot hotspot-pennants" data-open="pennants" aria-label="Open AVID Pennants"></button>
+
+    <a class="skip" href="#dock">Skip to category dock</a>
+
+    <!-- Zones -->
+    <div id="zone-frameworks"  class="zone">Frameworks</div>
+    <div id="zone-tools"       class="zone">Tools</div>
+    <div id="zone-newcomers"   class="zone">Newcomers</div>
+    <div id="zone-avid"        class="zone">AVID</div>
+    <div id="zone-ellevation"  class="zone">Ellevation</div>
+    <div id="zone-multicultural" class="zone">Multicultural</div>
+    <div id="zone-calls"       class="zone">Calls to Action</div>
+    <div id="zone-assessment"  class="zone">Assessment</div>
+    <div id="zone-music"       class="zone">Music</div>
+    <div id="zone-creative"    class="zone">Creative</div>
+
+    <svg id="paths" class="paths" aria-hidden="true"></svg>
+    <nav id="dock" class="dock" aria-label="Category navigation"></nav>
+
+    <section id="welcome" class="welcome" role="dialog" aria-modal="true" aria-labelledby="wTitle" aria-describedby="wBody">
+      <div class="card">
+        <h1 id="wTitle">Welcome to the Multilingual Learning Hub</h1>
+        <div id="wBody" class="wbody">
+          <p><strong>Intent:</strong> A living hub for resources, pathways, and calls to action to strengthen multilingual learning across NUSD.</p>
+          <ol>
+            <li>Skim the color-coded cranes (categories) below.</li>
+            <li>Click one &rarr; it flies to its resource zone and opens an info card.</li>
+            <li>After first visit, cranes anchor near their zones for quick re‑access.</li>
+          </ol>
+          <div class="actions">
+            <button id="startExploring" class="btn primary">Start exploring</button>
+            <button id="skipOnce" class="btn ghost">Skip once</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" aria-describedby="mBody" hidden>
+      <header id="mTitle"></header>
+      <div id="mBody"></div>
+      <div class="actions">
+        <a id="mLink" class="btn primary" target="_blank" rel="noopener">Open</a>
+        <button id="mClose" class="btn ghost">Close</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Music mini-player UI (module controls visibility) -->
+  <div id="musicPlayer" class="music-player hidden" role="region" aria-label="Music player">
+    <div class="mp-head">
+      <strong>Jukebox</strong>
+      <button class="mp-close" aria-label="Close player">×</button>
+    </div>
+    <div class="mp-body">
+      <button class="mp-prev" aria-label="Previous track">⟨</button>
+      <button class="mp-play" aria-label="Play/Pause">▶</button>
+      <button class="mp-next" aria-label="Next track">⟩</button>
+      <span class="mp-title" aria-live="polite">Track</span>
+    </div>
+    <audio id="mp-audio" preload="none"></audio>
+  </div>
+
+  <!-- Pennants panel (module controls visibility/position) -->
+  <div id="pennantsPanel" class="pennants-panel hidden" role="region" aria-label="AVID Pennants">
+    <div class="pp-head">
+      <strong>AVID Emerge — Grade Bands</strong>
+      <button class="pp-close" aria-label="Close panel">×</button>
+    </div>
+    <div class="pp-body">
+      <button data-grade="TK-2" class="pp-pill">TK–2</button>
+      <button data-grade="3-5"  class="pp-pill">3–5</button>
+      <button data-grade="6-8"  class="pp-pill">6–8</button>
+      <button data-grade="9-12" class="pp-pill">9–12</button>
+    </div>
+    <div class="pp-links">
+      <!-- module will fill links based on selected grade -->
+    </div>
+  </div>
+</body>
+</html>
