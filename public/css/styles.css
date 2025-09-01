@@ -15,9 +15,15 @@ body{
 
 /* Full-viewport background image (set by index.html inline or here if you prefer) */
 .room-bg{
-  position:fixed; inset:0;
-  background:center/cover no-repeat fixed;
-  z-index:-1; /* keep bg behind everything */
+  position: fixed;
+  inset: 0;
+  background: center/cover no-repeat fixed;
+  background-image: url("/images/hub-background.webp");
+  z-index: -1;
+}
+/* Fallback for browsers that don't support WebP */
+@supports not (background-image: url("/images/hub-background.webp")){
+  .room-bg{ background-image: url("/images/hub-background.png"); }
 }
 
 /* Hotspot layer sits on top, sized to a predictable aspect to match your art */
