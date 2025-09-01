@@ -1,0 +1,84 @@
+[
+  {
+    "id": "pennants",
+    "label": "AVID Pennants",
+    "rect": [0.23, 0.10, 0.26, 0.10],
+    "dataOpen": "pennants"
+  },
+  {
+    "id": "cranes",
+    "label": "Origami Cranes",
+    "rect": [0.56, 0.08, 0.17, 0.12],
+    "href": "https://multilingualhub.org/cranes",
+    "target": "_blank"
+  },
+  {
+    "id": "papel",
+    "label": "Papel Picado",
+    "rect": [0.67, 0.19, 0.23, 0.06],
+    "href": "https://multilingualhub.org/multicultural",
+    "target": "_blank"
+  },
+  {
+    "id": "delac",
+    "label": "DELAC Meeting",
+    "rect": [0.73, 0.12, 0.18, 0.08],
+    "href": "https://www.nusd.org/delac",
+    "target": "_blank"
+  },
+  {
+    "id": "jukebox",
+    "label": "Jukebox (Music)",
+    "rect": [0.18, 0.63, 0.10, 0.17],
+    "dataOpen": "music"
+  },
+  {
+    "id": "toolkits",
+    "label": "Toolkit Chest",
+    "rect": [0.33, 0.60, 0.15, 0.10],
+    "href": "https://multilingualhub.org/toolkits",
+    "target": "_blank"
+  },
+  {
+    "id": "elpac",
+    "label": "ELPAC Goals",
+    "rect": [0.46, 0.70, 0.12, 0.14],
+    "href": "https://multilingualhub.org/assessment",
+    "target": "_blank"
+  },
+  {
+    "id": "laptop",
+    "label": "Ellevation Laptop",
+    "rect": [0.58, 0.71, 0.15, 0.10],
+    "href": "https://ellevationeducation.com/",
+    "target": "_blank"
+  },
+  {
+    "id": "megaphone",
+    "label": "Calls to Action",
+    "rect": [0.71, 0.58, 0.10, 0.07],
+    "href": "https://multilingualhub.org/calls",
+    "target": "_blank"
+  },
+  {
+    "id": "greenscreen",
+    "label": "Green Screen Area",
+    "rect": [0.86, 0.52, 0.12, 0.28],
+    "href": "https://multilingualhub.org/creative",
+    "target": "_blank"
+  },
+  {
+    "id": "recording",
+    "label": "Recording Desk",
+    "rect": [0.85, 0.79, 0.12, 0.12],
+    "href": "https://multilingualhub.org/creative",
+    "target": "_blank"
+  },
+  {
+    "id": "globe",
+    "label": "Frameworks: Languages of Learning",
+    "rect": [0.63, 0.42, 0.08, 0.12],
+    "href": "https://multilingualhub.org/frameworks",
+    "target": "_blank"
+  }
+]
