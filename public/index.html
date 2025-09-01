@@ -5,15 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Multilingual Learning Hub — Crane Nav (v2+)</title>
 
-  <!-- Preload bg for faster first paint -->
+  <!-- Preload background for faster first paint -->
   <link rel="preload" as="image" href="/images/hub-background.webp" />
   <link rel="preload" as="image" href="/images/hub-background.png" />
 
   <!-- CSS -->
   <link rel="stylesheet" href="/css/styles.css" />
-  <link rel="stylesheet" href="/css/styles.css?v=2" />
 
-  <!-- GSAP + Modules -->
+  <!-- GSAP + Plugins -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
 
@@ -24,25 +23,30 @@
 </head>
 <body>
   <main id="stage" class="stage" aria-label="Multilingual Learning Hub">
+    <!-- Background -->
     <div class="room-bg" role="img" aria-label="Hub room background"></div>
+
+    <!-- Hotspots -->
     <div id="hotspotLayer" role="group" aria-label="Interactive areas"></div>
 
     <a class="skip" href="#dock">Skip to category dock</a>
 
-    <div id="zone-frameworks"  class="zone">Frameworks</div>
-    <div id="zone-tools"       class="zone">Tools</div>
-    <div id="zone-newcomers"   class="zone">Newcomers</div>
-    <div id="zone-avid"        class="zone">AVID</div>
-    <div id="zone-ellevation"  class="zone">Ellevation</div>
+    <!-- Zones -->
+    <div id="zone-frameworks" class="zone">Frameworks</div>
+    <div id="zone-tools" class="zone">Tools</div>
+    <div id="zone-newcomers" class="zone">Newcomers</div>
+    <div id="zone-avid" class="zone">AVID</div>
+    <div id="zone-ellevation" class="zone">Ellevation</div>
     <div id="zone-multicultural" class="zone">Multicultural</div>
-    <div id="zone-calls"       class="zone">Calls to Action</div>
-    <div id="zone-assessment"  class="zone">Assessment</div>
-    <div id="zone-music"       class="zone">Music</div>
-    <div id="zone-creative"    class="zone">Creative</div>
+    <div id="zone-calls" class="zone">Calls to Action</div>
+    <div id="zone-assessment" class="zone">Assessment</div>
+    <div id="zone-music" class="zone">Music</div>
+    <div id="zone-creative" class="zone">Creative</div>
 
     <svg id="paths" class="paths" aria-hidden="true"></svg>
     <nav id="dock" class="dock" aria-label="Category navigation"></nav>
 
+    <!-- Welcome Section -->
     <section id="welcome" class="welcome" role="dialog" aria-modal="true" aria-labelledby="wTitle" aria-describedby="wBody">
       <div class="card">
         <h1 id="wTitle">Welcome to the Multilingual Learning Hub</h1>
@@ -61,6 +65,7 @@
       </div>
     </section>
 
+    <!-- Modal -->
     <section id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" aria-describedby="mBody" hidden>
       <header id="mTitle"></header>
       <div id="mBody"></div>
@@ -71,6 +76,7 @@
     </section>
   </main>
 
+  <!-- Music Player -->
   <div id="musicPlayer" class="music-player hidden" role="region" aria-label="Music player">
     <div class="mp-head">
       <strong>Jukebox</strong>
@@ -85,6 +91,7 @@
     <audio id="mp-audio" preload="none"></audio>
   </div>
 
+  <!-- Pennants Panel -->
   <div id="pennantsPanel" class="pennants-panel hidden" role="region" aria-label="AVID Pennants">
     <div class="pp-head">
       <strong>AVID Emerge — Grade Bands</strong>
@@ -98,5 +105,70 @@
     </div>
     <div class="pp-links"></div>
   </div>
+
+  <!-- Hotspots Script -->
+  <script>
+    (async function () {
+      const params = new URLSearchParams(location.search);
+      if (params.get('dev') === '1') document.documentElement.classList.add('dev');
+
+      const layer = document.getElementById('hotspotLayer');
+
+      let map = [];
+      try {
+        const r = await fetch('/data/hotspots.json', { cache: 'no-cache' });
+        if (r.ok) map = await r.json();
+      } catch (e) { map = []; }
+
+      map.forEach(h => {
+        const btn = document.createElement('button');
+        btn.className = 'hotspot';
+        btn.type = 'button';
+        btn.setAttribute('aria-label', h.label || h.id || 'Hotspot');
+        btn.dataset.id = h.id || '';
+        const [x,y,w,hg] = h.rect;
+        Object.assign(btn.style, {
+          left:(x*100)+'%', top:(y*100)+'%',
+          width:(w*100)+'%', height:(hg*100)+'%'
+        });
+
+        btn.addEventListener('click', () => {
+          if (h.dataOpen) {
+            document.dispatchEvent(new CustomEvent('hub:open', { detail:{ target:h.dataOpen, meta:h } }));
+          } else if (h.href) {
+            if (h.target === '_blank') window.open(h.href, '_blank', 'noopener');
+            else location.href = h.href;
+          }
+        });
+
+        btn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+        });
+
+        layer.appendChild(btn);
+      });
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduce && !localStorage.getItem('hubOnboardingDone')) {
+        layer.querySelectorAll('.hotspot').forEach(h => h.classList.add('pulse-once'));
+        setTimeout(() => {
+          layer.querySelectorAll('.hotspot').forEach(h => h.classList.remove('pulse-once'));
+          localStorage.setItem('hubOnboardingDone','1');
+        }, 3600);
+      }
+
+      document.addEventListener('hub:open', (e) => {
+        const tgt = e.detail?.target;
+        if (tgt === 'music') {
+          const openBtn = document.querySelector('.hotspot-music');
+          openBtn?.click();
+        }
+        if (tgt === 'pennants') {
+          const openBtn = document.querySelector('.hotspot-pennants');
+          openBtn?.click();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
