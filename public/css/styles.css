@@ -22,21 +22,16 @@ html, body {
   padding: clamp(8px, 1.5vw, 18px);
 }
 
-/* Full-viewport background image with safe WebP + PNG + color fallback */
+/* ================================
+   Background (PNG only, safe fallback)
+================================ */
 .room-bg {
   position: fixed;
   inset: 0;
-  background-color: #f5f5f5;  /* 👈 soft neutral fallback */
+  background-color: #f5f5f5;  /* 👈 fallback color */
   background: center/cover no-repeat fixed;
-  background-image: url("/images/hub-background.png");  /* Default PNG */
+  background-image: url("/images/hub-background.png"); /* PNG only */
   z-index: -1;
-}
-
-/* Upgrade to WebP if the browser supports it */
-@supports (background-image: url("/images/hub-background.webp")) {
-  .room-bg {
-    background-image: url("/images/hub-background.webp");
-  }
 }
 
 /* ================================
