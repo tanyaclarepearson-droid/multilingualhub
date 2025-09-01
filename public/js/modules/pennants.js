@@ -1,0 +1,2 @@
+// pennants.js stub
+export {};
