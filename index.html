@@ -6,8 +6,8 @@
   <title>Multilingual Learning Hub — Crane Nav (v2+)</title>
 
   <!-- Preload bg for faster first paint -->
-  <link rel="preload" as="image" href="/src/images/hub-background.webp" />
-  <link rel="preload" as="image" href="/src/images/hub-background.png" />
+  <link rel="preload" as="image" href="/images/hub-background.webp" />
+  <link rel="preload" as="image" href="/images/hub-background.png" />
 
   <!-- Your existing CSS + GSAP + app modules -->
   <link rel="stylesheet" href="css/styles.css" />
@@ -20,15 +20,16 @@
   <!-- Minimal add-on styles: tooltips, pulse, dev outlines (you can move to css/styles.css) -->
   <style>
     :root{ --hub-max-w:1600px; --focus:rgba(0,120,255,.65); }
+
     /* Background container (room image set with CSS) */
     .room-bg{
       position:fixed; inset:0;
       background:center/cover no-repeat fixed;
-      background-image:url("/src/images/hub-background.webp");
+      background-image:url("/images/hub-background.webp");
       z-index:-1;
     }
-    @supports not (background-image:url("/src/images/hub-background.webp")){
-      .room-bg{ background-image:url("/src/images/hub-background.png"); }
+    @supports not (background-image:url("/images/hub-background.webp")){
+      .room-bg{ background-image:url("/images/hub-background.png"); }
     }
 
     /* Hotspot layer sits over the stage */
@@ -36,10 +37,8 @@
       position:relative;
       width:min(100%, var(--hub-max-w));
       margin-inline:auto;
-      /* maintain a predictable click-map; tune if your scene isn't 16:9 */
-      aspect-ratio:16/9;
-      /* create a stacking context so tooltips render above other UI */
-      isolation:isolate;
+      aspect-ratio:16/9; /* keep scene proportions */
+      isolation:isolate; /* tooltips above everything */
     }
 
     /* Base hotspot button */
@@ -49,7 +48,7 @@
     }
     .hotspot:focus-visible{ box-shadow:0 0 0 3px var(--focus); }
 
-    /* Tooltips from aria-label */
+    /* Tooltips */
     .hotspot:where(:hover,:focus-visible)::after{
       content:attr(aria-label);
       position:absolute; left:50%; top:-10px; transform:translate(-50%, -100%);
@@ -61,10 +60,10 @@
       width:8px; height:8px; background:rgba(0,0,0,.78); rotate:45deg; z-index:2;
     }
 
-    /* Optional dev mode: show clickable boxes with ?dev=1 */
+    /* Optional dev mode: show clickable boxes */
     .dev .hotspot{ outline:2px dashed rgba(0,0,0,.18); background:rgba(0,0,0,.02); }
 
-    /* Gentle “discover me” pulse (first visit only) */
+    /* Gentle “discover me” pulse */
     @keyframes hub-pulse{
       0%{ box-shadow:0 0 0 0 rgba(0,120,255,.35); }
       70%{ box-shadow:0 0 0 18px rgba(0,120,255,0); }
@@ -73,11 +72,14 @@
     .pulse-once{ animation:hub-pulse 1.6s ease-out 0s 2; border-radius:10px; }
     @media (prefers-reduced-motion:reduce){ .pulse-once{ animation:none; } }
 
-    /* Stage container helps center the interactive layer over fixed bg */
+    /* Stage container */
     .stage{
       min-height:100svh; display:grid; place-items:center;
       padding:clamp(8px, 1.5vw, 18px);
     }
+
+    /* Overlay images */
+    .ov{ position:absolute; pointer-events:none; }
   </style>
 </head>
 <body>
@@ -85,13 +87,32 @@
     <!-- Fixed full-viewport background -->
     <div class="room-bg" role="img" aria-label="Hub room background"></div>
 
-    <!-- JSON-driven hotspots land here (over the background) -->
-    <div id="hotspotLayer" role="group" aria-label="Interactive areas"></div>
+    <!-- Overlay assets -->
+    <div id="hotspotLayer" role="group" aria-label="Interactive areas">
+      <img class="ov pennant tk2"  src="/images/avid-tk-2.png"  alt="">
+      <img class="ov pennant g35"  src="/images/avid-3-5.png"  alt="">
+      <img class="ov pennant g68"  src="/images/avid-6-8.png"  alt="">
+      <img class="ov pennant g912" src="/images/avid-9-12.png" alt="">
 
-    <!-- Keep your skip link, zones, dock, dialogs, etc. -->
+      <img class="ov papel"  src="/images/papel-picado.png"   alt="">
+      <img class="ov cranes" src="/images/origami-cranes.png" alt="">
+
+      <img class="ov delac"       src="/images/delac-calendar.png"   alt="">
+      <img class="ov globe"       src="/images/globe.png"            alt="">
+      <img class="ov greenscreen" src="/images/green-screen.png"     alt="">
+      <img class="ov desk"        src="/images/recording-desk.png"   alt="">
+      <img class="ov mega"        src="/images/megaphone.png"        alt="">
+      <img class="ov laptop"      src="/images/elevation-laptop.png" alt="">
+      <img class="ov vase"        src="/images/flower-vase.png"      alt="">
+      <img class="ov jukebox"     src="/images/jukebox.png"          alt="">
+      <img class="ov chest"       src="/images/toolkit-chest.png"    alt="">
+      <img class="ov elpac"       src="/images/elpac-goals.png"      alt="">
+    </div>
+
+    <!-- Skip nav -->
     <a class="skip" href="#dock">Skip to category dock</a>
 
-    <!-- Zones (for crane landing, GSAP routes, etc.) -->
+    <!-- Zones -->
     <div id="zone-frameworks"  class="zone">Frameworks</div>
     <div id="zone-tools"       class="zone">Tools</div>
     <div id="zone-newcomers"   class="zone">Newcomers</div>
@@ -106,6 +127,7 @@
     <svg id="paths" class="paths" aria-hidden="true"></svg>
     <nav id="dock" class="dock" aria-label="Category navigation"></nav>
 
+    <!-- Welcome dialog -->
     <section id="welcome" class="welcome" role="dialog" aria-modal="true" aria-labelledby="wTitle" aria-describedby="wBody">
       <div class="card">
         <h1 id="wTitle">Welcome to the Multilingual Learning Hub</h1>
@@ -124,6 +146,7 @@
       </div>
     </section>
 
+    <!-- Modal -->
     <section id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" aria-describedby="mBody" hidden>
       <header id="mTitle"></header>
       <div id="mBody"></div>
@@ -134,7 +157,7 @@
     </section>
   </main>
 
-  <!-- Music mini-player UI (module controls visibility) -->
+  <!-- Music mini-player -->
   <div id="musicPlayer" class="music-player hidden" role="region" aria-label="Music player">
     <div class="mp-head">
       <strong>Jukebox</strong>
@@ -149,7 +172,7 @@
     <audio id="mp-audio" preload="none"></audio>
   </div>
 
-  <!-- Pennants panel (module controls visibility/position) -->
+  <!-- Pennants panel -->
   <div id="pennantsPanel" class="pennants-panel hidden" role="region" aria-label="AVID Pennants">
     <div class="pp-head">
       <strong>AVID Emerge — Grade Bands</strong>
@@ -164,39 +187,32 @@
     <div class="pp-links"></div>
   </div>
 
-  <!-- Lightweight hotspot loader + discoverability -->
+  <!-- Hotspot loader -->
   <script>
     (async function () {
-      // Dev outlines via ?dev=1
       const params = new URLSearchParams(location.search);
       if (params.get('dev') === '1') document.documentElement.classList.add('dev');
 
       const layer = document.getElementById('hotspotLayer');
 
-      // Load hotspots JSON (fallback to empty array)
       let map = [];
       try {
-        const r = await fetch('/src/data/hotspots.json', { cache: 'no-cache' });
+        const r = await fetch('/data/hotspots.json', { cache: 'no-cache' });
         if (r.ok) map = await r.json();
       } catch (e) { map = []; }
 
-      // Build <button> hotspots
       map.forEach(h => {
         const btn = document.createElement('button');
         btn.className = 'hotspot';
         btn.type = 'button';
         btn.setAttribute('aria-label', h.label || h.id || 'Hotspot');
         btn.dataset.id = h.id || '';
-        // Position from [x,y,w,h] (0–1)
         const [x,y,w,hg] = h.rect;
         Object.assign(btn.style, {
           left:(x*100)+'%', top:(y*100)+'%',
           width:(w*100)+'%', height:(hg*100)+'%'
         });
 
-        // Click behavior:
-        // 1) If "href" is present, navigate
-        // 2) If "dataOpen" is present, dispatch a custom event for your modules
         btn.addEventListener('click', () => {
           if (h.dataOpen) {
             document.dispatchEvent(new CustomEvent('hub:open', { detail:{ target:h.dataOpen, meta:h } }));
@@ -206,7 +222,6 @@
           }
         });
 
-        // Keyboard support
         btn.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
         });
@@ -214,7 +229,6 @@
         layer.appendChild(btn);
       });
 
-      // One-time “discover me” pulse
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (!reduce && !localStorage.getItem('hubOnboardingDone')) {
         layer.querySelectorAll('.hotspot').forEach(h => h.classList.add('pulse-once'));
@@ -224,14 +238,11 @@
         }, 3600);
       }
 
-      // Optional: route module opens from hotspots via "dataOpen"
-      // Example: { id:"jukebox", dataOpen:"music" } will open the music panel
       document.addEventListener('hub:open', (e) => {
         const tgt = e.detail?.target;
         if (tgt === 'music') {
-          // your music module can also listen for this event
           const openBtn = document.querySelector('.hotspot-music');
-          openBtn?.click(); // reuse existing handler if you like
+          openBtn?.click();
         }
         if (tgt === 'pennants') {
           const openBtn = document.querySelector('.hotspot-pennants');
