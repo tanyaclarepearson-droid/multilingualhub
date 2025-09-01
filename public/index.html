@@ -1,11 +1,209 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Multilingual Learning Hub — Crane Nav (v2+)</title>
+
+  <!-- Preload bg for faster first paint -->
+  <link rel="preload" as="image" href="/images/hub-background.webp" />
+  <link rel="preload" as="image" href="/images/hub-background.png" />
+
+  <!-- Your existing CSS + GSAP + app modules -->
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/MotionPathPlugin.min.js"></script>
+  <script defer src="/js/app.js"></script>
+  <script defer src="/js/modules/music.js"></script>
+  <script defer src="/js/modules/pennants.js"></script>
+
+  <!-- Minimal add-on styles -->
+  <style>
+    :root{ --hub-max-w:1600px; --focus:rgba(0,120,255,.65); }
+    .room-bg{
+      position:fixed; inset:0;
+      background:center/cover no-repeat fixed;
+      background-image:url("/images/hub-background.webp");
+      z-index:-1;
+    }
+    @supports not (background-image:url("/images/hub-background.webp")){
+      .room-bg{ background-image:url("/images/hub-background.png"); }
+    }
+    #hotspotLayer{
+      position:relative;
+      width:min(100%, var(--hub-max-w));
+      margin-inline:auto;
+      aspect-ratio:16/9;
+      isolation:isolate;
+    }
+    .hotspot{
+      position:absolute; display:block; border:0; background:transparent;
+      border-radius:10px; outline:none; cursor:pointer;
+    }
+    .hotspot:focus-visible{ box-shadow:0 0 0 3px var(--focus); }
+    .hotspot:where(:hover,:focus-visible)::after{
+      content:attr(aria-label);
+      position:absolute; left:50%; top:-10px; transform:translate(-50%, -100%);
+      padding:.35rem .55rem; font-size:.85rem; color:#fff; background:rgba(0,0,0,.78);
+      border-radius:.5rem; white-space:nowrap; pointer-events:none; z-index:3;
+    }
+    .hotspot:where(:hover,:focus-visible)::before{
+      content:""; position:absolute; left:50%; top:-10px; transform:translate(-50%,-60%);
+      width:8px; height:8px; background:rgba(0,0,0,.78); rotate:45deg; z-index:2;
+    }
+    .dev .hotspot{ outline:2px dashed rgba(0,0,0,.18); background:rgba(0,0,0,.02); }
+    @keyframes hub-pulse{
+      0%{ box-shadow:0 0 0 0 rgba(0,120,255,.35); }
+      70%{ box-shadow:0 0 0 18px rgba(0,120,255,0); }
+      100%{ box-shadow:0 0 0 0 rgba(0,120,255,0); }
+    }
+    .pulse-once{ animation:hub-pulse 1.6s ease-out 0s 2; border-radius:10px; }
+    @media (prefers-reduced-motion:reduce){ .pulse-once{ animation:none; } }
+    .stage{
+      min-height:100svh; display:grid; place-items:center;
+      padding:clamp(8px, 1.5vw, 18px);
+    }
+  </style>
 </head>
 <body>
-    <h1>Hello, World!</h1>
+  <main id="stage" class="stage" aria-label="Multilingual Learning Hub">
+    <div class="room-bg" role="img" aria-label="Hub room background"></div>
+    <div id="hotspotLayer" role="group" aria-label="Interactive areas"></div>
+
+    <a class="skip" href="#dock">Skip to category dock</a>
+
+    <div id="zone-frameworks"  class="zone">Frameworks</div>
+    <div id="zone-tools"       class="zone">Tools</div>
+    <div id="zone-newcomers"   class="zone">Newcomers</div>
+    <div id="zone-avid"        class="zone">AVID</div>
+    <div id="zone-ellevation"  class="zone">Ellevation</div>
+    <div id="zone-multicultural" class="zone">Multicultural</div>
+    <div id="zone-calls"       class="zone">Calls to Action</div>
+    <div id="zone-assessment"  class="zone">Assessment</div>
+    <div id="zone-music"       class="zone">Music</div>
+    <div id="zone-creative"    class="zone">Creative</div>
+
+    <svg id="paths" class="paths" aria-hidden="true"></svg>
+    <nav id="dock" class="dock" aria-label="Category navigation"></nav>
+
+    <section id="welcome" class="welcome" role="dialog" aria-modal="true" aria-labelledby="wTitle" aria-describedby="wBody">
+      <div class="card">
+        <h1 id="wTitle">Welcome to the Multilingual Learning Hub</h1>
+        <div id="wBody" class="wbody">
+          <p><strong>Intent:</strong> A living hub for resources, pathways, and calls to action to strengthen multilingual learning across NUSD.</p>
+          <ol>
+            <li>Skim the color-coded cranes (categories) below.</li>
+            <li>Click one → it flies to its resource zone and opens an info card.</li>
+            <li>After first visit, cranes anchor near their zones for quick re-access.</li>
+          </ol>
+          <div class="actions">
+            <button id="startExploring" class="btn primary">Start exploring</button>
+            <button id="skipOnce" class="btn ghost">Skip once</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" aria-describedby="mBody" hidden>
+      <header id="mTitle"></header>
+      <div id="mBody"></div>
+      <div class="actions">
+        <a id="mLink" class="btn primary" target="_blank" rel="noopener">Open</a>
+        <button id="mClose" class="btn ghost">Close</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="musicPlayer" class="music-player hidden" role="region" aria-label="Music player">
+    <div class="mp-head">
+      <strong>Jukebox</strong>
+      <button class="mp-close" aria-label="Close player">×</button>
+    </div>
+    <div class="mp-body">
+      <button class="mp-prev" aria-label="Previous track">⟨</button>
+      <button class="mp-play" aria-label="Play/Pause">▶</button>
+      <button class="mp-next" aria-label="Next track">⟩</button>
+      <span class="mp-title" aria-live="polite">Track</span>
+    </div>
+    <audio id="mp-audio" preload="none"></audio>
+  </div>
+
+  <div id="pennantsPanel" class="pennants-panel hidden" role="region" aria-label="AVID Pennants">
+    <div class="pp-head">
+      <strong>AVID Emerge — Grade Bands</strong>
+      <button class="pp-close" aria-label="Close panel">×</button>
+    </div>
+    <div class="pp-body">
+      <button data-grade="TK-2" class="pp-pill">TK–2</button>
+      <button data-grade="3-5"  class="pp-pill">3–5</button>
+      <button data-grade="6-8"  class="pp-pill">6–8</button>
+      <button data-grade="9-12" class="pp-pill">9–12</button>
+    </div>
+    <div class="pp-links"></div>
+  </div>
+
+  <script>
+    (async function () {
+      const params = new URLSearchParams(location.search);
+      if (params.get('dev') === '1') document.documentElement.classList.add('dev');
+
+      const layer = document.getElementById('hotspotLayer');
+
+      let map = [];
+      try {
+        const r = await fetch('/data/hotspots.json', { cache: 'no-cache' });
+        if (r.ok) map = await r.json();
+      } catch (e) { map = []; }
+
+      map.forEach(h => {
+        const btn = document.createElement('button');
+        btn.className = 'hotspot';
+        btn.type = 'button';
+        btn.setAttribute('aria-label', h.label || h.id || 'Hotspot');
+        btn.dataset.id = h.id || '';
+        const [x,y,w,hg] = h.rect;
+        Object.assign(btn.style, {
+          left:(x*100)+'%', top:(y*100)+'%',
+          width:(w*100)+'%', height:(hg*100)+'%'
+        });
+
+        btn.addEventListener('click', () => {
+          if (h.dataOpen) {
+            document.dispatchEvent(new CustomEvent('hub:open', { detail:{ target:h.dataOpen, meta:h } }));
+          } else if (h.href) {
+            if (h.target === '_blank') window.open(h.href, '_blank', 'noopener');
+            else location.href = h.href;
+          }
+        });
+
+        btn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); btn.click(); }
+        });
+
+        layer.appendChild(btn);
+      });
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduce && !localStorage.getItem('hubOnboardingDone')) {
+        layer.querySelectorAll('.hotspot').forEach(h => h.classList.add('pulse-once'));
+        setTimeout(() => {
+          layer.querySelectorAll('.hotspot').forEach(h => h.classList.remove('pulse-once'));
+          localStorage.setItem('hubOnboardingDone','1');
+        }, 3600);
+      }
+
+      document.addEventListener('hub:open', (e) => {
+        const tgt = e.detail?.target;
+        if (tgt === 'music') {
+          const openBtn = document.querySelector('.hotspot-music');
+          openBtn?.click();
+        }
+        if (tgt === 'pennants') {
+          const openBtn = document.querySelector('.hotspot-pennants');
+          openBtn?.click();
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
