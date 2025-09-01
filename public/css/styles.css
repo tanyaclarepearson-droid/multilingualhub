@@ -22,10 +22,11 @@ html, body {
   padding: clamp(8px, 1.5vw, 18px);
 }
 
-/* Full-viewport background image with safe WebP fallback */
+/* Full-viewport background image with safe WebP + PNG + color fallback */
 .room-bg {
   position: fixed;
   inset: 0;
+  background-color: #f5f5f5;  /* 👈 soft neutral fallback */
   background: center/cover no-repeat fixed;
   background-image: url("/images/hub-background.png");  /* Default PNG */
   z-index: -1;
