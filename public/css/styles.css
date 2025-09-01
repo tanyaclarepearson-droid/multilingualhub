@@ -22,17 +22,16 @@ html, body {
   padding: clamp(8px, 1.5vw, 18px);
 }
 
-/* ================================
-   Background
-================================ */
+/* Full-viewport background image with safe WebP fallback */
 .room-bg {
   position: fixed;
   inset: 0;
-  background: url("/images/hub-background.png") center/cover no-repeat fixed;
-  z-index: -1; /* keep behind everything */
+  background: center/cover no-repeat fixed;
+  background-image: url("/images/hub-background.png");  /* Default PNG */
+  z-index: -1;
 }
 
-/* Prefer WebP if supported */
+/* Upgrade to WebP if the browser supports it */
 @supports (background-image: url("/images/hub-background.webp")) {
   .room-bg {
     background-image: url("/images/hub-background.webp");
