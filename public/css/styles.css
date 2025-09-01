@@ -1,0 +1,67 @@
+/* ===== Base & layout ===== */
+:root { --hub-max-w:1600px; --focus:rgba(0,120,255,.65); }
+
+html,body{ margin:0; padding:0; }
+body{
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  color:#111;
+}
+
+/* Stage centers the interactive layer over the fixed background */
+.stage{
+  min-height:100svh; display:grid; place-items:center;
+  padding:clamp(8px, 1.5vw, 18px);
+}
+
+/* Full-viewport background image (set by index.html inline or here if you prefer) */
+.room-bg{
+  position:fixed; inset:0;
+  background:center/cover no-repeat fixed;
+  z-index:-1; /* keep bg behind everything */
+}
+
+/* Hotspot layer sits on top, sized to a predictable aspect to match your art */
+#hotspotLayer{
+  position:relative;
+  width:min(100%, var(--hub-max-w));
+  margin-inline:auto;
+  aspect-ratio:16/9;         /* matches your PNG/WEBP */
+  isolation:isolate;          /* ensures tooltips overlay properly */
+}
+
+/* ===== Hotspots ===== */
+.hotspot{
+  position:absolute; display:block; border:0; background:transparent;
+  border-radius:10px; outline:none; cursor:pointer;
+}
+
+/* Keyboard focus ring */
+.hotspot:focus-visible{ box-shadow:0 0 0 3px var(--focus); }
+
+/* Simple tooltip from aria-label */
+.hotspot:where(:hover,:focus-visible)::after{
+  content:attr(aria-label);
+  position:absolute; left:50%; top:-10px; transform:translate(-50%, -100%);
+  padding:.35rem .55rem; font-size:.85rem; color:#fff; background:rgba(0,0,0,.78);
+  border-radius:.5rem; white-space:nowrap; pointer-events:none; z-index:3;
+}
+.hotspot:where(:hover,:focus-visible)::before{
+  content:""; position:absolute; left:50%; top:-10px; transform:translate(-50%,-60%);
+  width:8px; height:8px; background:rgba(0,0,0,.78); rotate:45deg; z-index:2;
+}
+
+/* Optional dev mode: ?dev=1 shows clickable boxes */
+.dev .hotspot{ outline:2px dashed rgba(0,0,0,.18); background:rgba(0,0,0,.02); }
+
+/* Gentle “discover me” pulse (first visit only) */
+@keyframes hub-pulse{
+  0%{ box-shadow:0 0 0 0 rgba(0,120,255,.35); }
+  70%{ box-shadow:0 0 0 18px rgba(0,120,255,0); }
+  100%{ box-shadow:0 0 0 0 rgba(0,120,255,0); }
+}
+.pulse-once{ animation:hub-pulse 1.6s ease-out 0s 2; border-radius:10px; }
+@media (prefers-reduced-motion:reduce){ .pulse-once{ animation:none; } }
+
+/* Utility (you can delete later) */
+.skip{ position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+.skip:focus{ position:static; width:auto; height:auto; display:inline-block; margin:8px; }
