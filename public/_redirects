@@ -1,2 +1,0 @@
-/images/*   /public/images/:splat   200
-/data/*     /public/data/:splat     200
