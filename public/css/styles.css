@@ -169,3 +169,49 @@ html, body {
 
 /* Optional accessibility focus */
 .hotspot:focus-visible { outline: 3px solid #1e90ff; outline-offset: 2px; }
+/* Overlay layer sits above background, below UI */
+.overlay-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ov { position: absolute; height: auto; }
+
+/* Quickly-tunable examples (percent of the stage) */
+.ov-jukebox       { left: 15%; top: 63%; width: 12%; }
+.ov-megaphone     { left: 74%; top: 54%; width: 10%; }
+.ov-green-screen  { left: 91%; top: 57%; width: 10%; transform: translateX(-100%); }
+.ov-recording-desk{ left: 86%; top: 73%; width: 12%; transform: translateX(-100%); }
+.ov-origami       { left: 61%; top: 10%; width: 16%; }
+.ov-papel         { left: 52%; top: 28%; width: 25%; }
+.ov-toolkit       { left: 21%; top: 61%; width: 11%; }
+.ov-objectives    { left: 23%; top: 24%; width: 18%; }
+.ov-elpac         { left: 43%; top: 70%; width: 12%; }
+.ov-elevation     { left: 64%; top: 75%; width: 14%; transform: translateX(-50%); }
+.ov-delac         { left: 76%; top: 10%; width: 20%; transform: rotate(-8deg); }
+.ov-avid-tk2      { left: 31%; top: 12%; width: 10%; }
+.ov-avid-35       { left: 36%; top: 12%; width: 10%; }
+.ov-avid-68       { left: 41%; top: 12%; width: 10%; }
+.ov-avid-912      { left: 46%; top: 12%; width: 10%; }
+.ov-flower        { left: 16%; top: 71%; width: 6%; }
+.ov-songbridge    { left: 9%;  top: 38%; width: 10%; }
+
+/* Make sure the stage is the positioning context */
+#stage {
+  position: relative;
+  min-height: 100vh;
+  background: url('/images/hub-background.webp') center/cover no-repeat, 
+              url('/images/hub-background.png') center/cover no-repeat;
+  overflow: hidden;
+}
+
+/* Keep onboarding text readable but not blocking */
+.welcome .card {
+  backdrop-filter: blur(3px);
+  background: color-mix(in srgb, #ffffff 78%, transparent);
+  border-radius: 12px;
+  z-index: 5;
+}
+
