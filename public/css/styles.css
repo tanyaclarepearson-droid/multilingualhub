@@ -129,3 +129,43 @@ html, body {
   display: inline-block;
   margin: 8px;
 }
+/* --- Hotspot base --- */
+.stage { position: relative; min-height: 100vh; }
+.room-bg { position: absolute; inset: 0; background: url("/images/hub-background.webp") center/cover no-repeat; }
+#hotspotLayer { position: absolute; inset: 0; z-index: 2; }
+
+.hotspot{
+  position:absolute; border:0; background: transparent;
+  background-size: contain; background-repeat:no-repeat; background-position:center;
+  outline: none; cursor: pointer;
+  /* optional: a gentle glow so they pop a bit */
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,.25));
+}
+
+/* If you still want a temporary visual while testing, toggle this on/off */
+/* .hotspot { background-color: rgba(255,0,0,.1); border: 1px dashed rgba(160,0,0,.3); } */
+
+/* --- Map hotspot IDs to images --- */
+/* Make sure the IDs in /data/hotspots.json match these values exactly. */
+
+.hotspot[data-id="jukebox"]            { background-image:url("/images/jukebox.png"); }
+.hotspot[data-id="megaphone"]          { background-image:url("/images/megaphone.png"); }
+.hotspot[data-id="recording-desk"]     { background-image:url("/images/recording-desk.png"); }
+.hotspot[data-id="objectives-screen"]  { background-image:url("/images/objectives-screen.png"); }
+.hotspot[data-id="toolkit-chest"]      { background-image:url("/images/toolkit-chest.png"); }
+.hotspot[data-id="flower-vase"]        { background-image:url("/images/flower-vase.png"); }
+.hotspot[data-id="papel-picado"]       { background-image:url("/images/papel-picado.png"); }
+.hotspot[data-id="origami-cranes"]     { background-image:url("/images/origami-cranes.png"); }
+.hotspot[data-id="green-screen"]       { background-image:url("/images/green-screen.png"); }
+.hotspot[data-id="delac-marquee"]      { background-image:url("/images/delac-marquee.png"); }
+.hotspot[data-id="elevation-laptop"]   { background-image:url("/images/elevation-laptop.png"); }
+.hotspot[data-id="elpac-goals"]        { background-image:url("/images/elpac-goals.png"); }
+
+/* AVID pennants (if you place them as hotspots) */
+.hotspot[data-id="avid-tk-2"]          { background-image:url("/images/avid-tk-2.png"); }
+.hotspot[data-id="avid-3-5"]           { background-image:url("/images/avid-3-5.png"); }
+.hotspot[data-id="avid-6-8"]           { background-image:url("/images/avid-6-8.png"); }
+.hotspot[data-id="avid-9-12"]          { background-image:url("/images/avid-9-12.png"); }
+
+/* Optional accessibility focus */
+.hotspot:focus-visible { outline: 3px solid #1e90ff; outline-offset: 2px; }
