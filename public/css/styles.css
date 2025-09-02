@@ -214,4 +214,8 @@ html, body {
   border-radius: 12px;
   z-index: 5;
 }
+.zone {
+  font-size: 0;   /* hides stray text labels */
+  color: transparent;
+}
 
