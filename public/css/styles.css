@@ -249,3 +249,27 @@ html, body {
 .dev #toggle-cranes {
   display: block;
 }
+/* Hide the crane toggle by default */
+#toggle-cranes {
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  background: rgba(0,0,0,.75);
+  color: #fff;
+  border: 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font: 14px/1.2 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  cursor: pointer;
+}
+#toggle-cranes:hover { background: rgba(0,0,0,.9); }
+
+/* Show the button only in dev mode (?dev=1 sets .dev on <html>) */
+.dev #toggle-cranes { display: inline-block; }
+
+/* Hide crane paths when cranes-off is active */
+.cranes-off .paths { display: none !important; }
+.cranes-off svg.paths { display: none !important; } /* if your paths are an <svg> */
+
