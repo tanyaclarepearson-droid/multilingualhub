@@ -218,4 +218,7 @@ html, body {
   font-size: 0;   /* hides stray text labels */
   color: transparent;
 }
-
+/* Toggle to hide crane animation overlay */
+.cranes-off .paths {
+  display: none !important;
+}
