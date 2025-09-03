@@ -21,6 +21,7 @@
   <script defer src="/js/modules/pennants.js"></script>
 </head>
 <body>
+  <button id="toggle-cranes" aria-pressed="false">Toggle Cranes</button>
   <button id="toggle-cranes">Toggle Cranes</button>
   <main id="stage" class="stage" aria-label="Multilingual Learning Hub">
     <!-- Background -->
@@ -190,6 +191,31 @@
       });
     })();
   </script>
-  
+  <script>
+  // Show/hide cranes by toggling `cranes-off` on <body>
+  function toggleCranes() {
+    const off = document.body.classList.toggle('cranes-off');
+    const btn = document.getElementById('toggle-cranes');
+    if (btn) btn.setAttribute('aria-pressed', String(off));
+    console.log('Cranes:', off ? 'OFF' : 'ON');
+  }
+
+  // In dev mode (?dev=1 adds .dev to <html>), start with cranes OFF
+  if (document.documentElement.classList.contains('dev')) {
+    document.body.classList.add('cranes-off');
+  }
+
+  // Wire the button (if present)
+  (function () {
+    const btn = document.getElementById('toggle-cranes');
+    if (!btn) return;
+    btn.addEventListener('click', toggleCranes);
+  })();
+
+  // Keyboard shortcut: press "C" to toggle cranes
+  document.addEventListener('keydown', (e) => {
+    if (e.key && e.key.toLowerCase() === 'c') toggleCranes();
+  });
+</script>
 </body>
 </html>
