@@ -189,5 +189,14 @@
       });
     })();
   </script>
+  <script>
+  document.addEventListener('keydown', function(event) {
+    // If "c" or "C" is pressed
+    if (event.key.toLowerCase() === 'c') {
+      document.body.classList.toggle('cranes-off');
+      console.log('Cranes toggled:', document.body.classList.contains('cranes-off') ? 'OFF' : 'ON');
+    }
+  });
+</script>
 </body>
 </html>
