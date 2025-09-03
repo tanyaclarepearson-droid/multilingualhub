@@ -190,30 +190,6 @@
       });
     })();
   </script>
-  <script>
-  document.addEventListener('keydown', function(event) {
-    // If "c" or "C" is pressed
-    if (event.key.toLowerCase() === 'c') {
-      document.body.classList.toggle('cranes-off');
-      console.log('Cranes toggled:', document.body.classList.contains('cranes-off') ? 'OFF' : 'ON');
-    }
-  });
-</script>
-  <script>
-  function toggleCranes() {
-    document.body.classList.toggle('cranes-off');
-    console.log('Cranes toggled:', document.body.classList.contains('cranes-off') ? 'OFF' : 'ON');
-  }
-
-  // Toggle with button
-  document.getElementById('toggle-cranes').addEventListener('click', toggleCranes);
-
-  // Toggle with "C" key
-  document.addEventListener('keydown', function(event) {
-    if (event.key.toLowerCase() === 'c') {
-      toggleCranes();
-    }
-  });
-</script>
+  
 </body>
 </html>
