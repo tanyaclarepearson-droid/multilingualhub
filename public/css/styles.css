@@ -195,3 +195,8 @@ html, body {
 .cranes-off .paths { display: none !important; }
 .cranes-off svg.paths { display: none !important; } /* if your paths are an <svg> */
 
+/* optional: improve touch targets */
+.hotspot { min-width: 36px; min-height: 36px; }
+.zone { pointer-events: none; }
+
+
